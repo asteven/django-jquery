@@ -1,5 +1,19 @@
 Package jquery and jquery-ui for use with django staticfiles.
 
+
+To use this:
+1) configure STATIC_ROOT in settings.py
+2) add the jquery app to INSTALLED_APPS
+3) run: python manage.py collectstatic
+
+And then in the templates use
+
+<script src="{{ STATIC_URL }}jquery/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}jquery/css/smoothness/jquery-ui.css" />
+
+
+--------------------------------------------------------------------------------
+
 cd tmp/
 wget http://jqueryui.com/download/jquery-ui-1.8.16.custom.zip
 unzip jquery-ui-1.8.16.custom.zip -d jquery-ui
