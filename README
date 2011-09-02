@@ -1,0 +1,15 @@
+Package jquery and jquery-ui for use with django staticfiles.
+
+cd tmp/
+wget http://jqueryui.com/download/jquery-ui-1.8.16.custom.zip
+unzip jquery-ui-1.8.16.custom.zip -d jquery-ui
+
+
+cp -a jquery-ui/css static/jquery/
+(cd static/jquery/css/smoothness/
+ln -s jquery-ui-1.8.16.custom.css jquery-ui.css)
+
+cp jquery-ui/development-bundle/ui/minified/* static/jquery/js/
+(cd static/jquery/js/
+ln -s jquery-1.6.2.min.js jquery.min.js)
+
