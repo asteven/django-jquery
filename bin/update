@@ -15,6 +15,7 @@ DONE
    exit 1
 }
 
+git checkout master
 
 cd "$project_dir/tmp"
 wget "$uri" -O jquery-ui.zip
@@ -46,3 +47,12 @@ cp -a jquery-ui/css "$target_dir/"
 cp -a jquery-ui/js "$target_dir/"
 
 rm -rf "$project_dir/tmp/*"
+
+commit_message="added new jquery version: $jquery_version"
+git add .
+git add -A
+git commit -a -s -m "$commit_message"
+git tag "$jquery_version" -m "$commit_message"
+
+git checkout master
+git branch -D "$jquery_version"
