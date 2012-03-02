@@ -1,0 +1,48 @@
+#!/bin/sh
+
+mydir=$(cd "${0%/*}"; pwd -P)
+myname="${mydir##*/}"
+project_dir="$(cd "$mydir/../"; pwd -P)"
+target_dir="$project_dir/jquery/static/jquery"
+
+uri="$1"
+
+[ -n "$uri" ] || {
+   cat >&2 << DONE
+Usage: $myname URI
+e.g. $myname http://jqueryui.com/download/jquery-ui-1.8.18.custom.zip
+DONE
+   exit 1
+}
+
+
+cd "$project_dir/tmp"
+wget "$uri" -O jquery-ui.zip
+unzip jquery-ui.zip -d jquery-ui
+
+jquery_file="$(find jquery-ui/js/ -name "jquery-[0-9].[0-9].[0-9].min.js" -printf "%f")"
+jquery_version="${jquery_file##jquery-}"
+jquery_version="${jquery_version##jquery-}"
+jquery_version="${jquery_version%.min.js}"
+
+echo "jquery_version: $jquery_version"
+
+git checkout -b "$jquery_version"
+
+rm -rf "$target_dir/*"
+
+(
+   cd jquery-ui/css/smoothness/
+   ln -s jquery-ui-*.custom.css jquery-ui.css
+)
+cp -a jquery-ui/css "$target_dir/"
+
+(
+   cp jquery-ui/development-bundle/ui/minified/* jquery-ui/js/
+   cd jquery-ui/js/
+   ln -s jquery-ui-*custom.min.js jquery-ui.js
+   ln -s $jquery_file jquery.min.js
+)
+cp -a jquery-ui/js "$target_dir/"
+
+rm -rf "$project_dir/tmp/*"
